@@ -1,7 +1,5 @@
 package com.projeto.estagio.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -9,6 +7,7 @@ import lombok.Data;
 @Table (name = "registros")
 public class RegistroModel {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String nome;
     private int idade;
