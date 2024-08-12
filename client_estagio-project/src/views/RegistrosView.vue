@@ -2,6 +2,7 @@
 import RegistrosService from '@/services/RegistrosService';
 
 export default {
+  name: 'RegistrosView',
   data() {
     return {
       registros: []
@@ -32,12 +33,12 @@ export default {
 </script>
 
 <template>
+<div>
   <div class="dashboard">
     <h1 class="dashboard__title">Registros</h1>
     <table class="dashboard__table">
       <thead>
         <tr>
-          <th>ID</th>
           <th>Nome</th>
           <th>Idade</th>
           <th>Email</th>
@@ -45,13 +46,11 @@ export default {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(registro, index) in registros" :key="registro.id">
-          <td>{{ index }}</td>
+        <tr v-for="(registro) in registros" :key="registro.id">
           <td>{{ registro.nome }}</td>
           <td>{{ registro.idade }}</td>
           <td>{{ registro.email }}</td>
           <td>
-            <button class="dashboard__adicionar">Adicionar</button>
             <button class="dashboard__editar" @click="editarRegistro(registro.id)">Editar</button>
             <button class="dashboard__excluir" @click="removerRegistro(registro.id)">Excluir</button>
           </td>
@@ -59,6 +58,9 @@ export default {
       </tbody>
     </table>
   </div>
+    <RouterLink to="/" class="adicionar">Adicionar Registro</RouterLink>
+</div>
+
 </template>
 <style>
 
@@ -96,35 +98,50 @@ export default {
   cursor: pointer;
 }
 
-.dashboard__table td button.btn-acao {
-  margin-left: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
+
+.adicionar{  
+  margin-left: 20px;
+  padding: 8px;
+  display: inline-flex;
+  font-size: 1em;
+  font-family: Arial;
   color: white;
+  background-color: #658f75;;
   border: none;
   border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+
 }
 
 .dashboard__editar{
   padding: 8px;
-  font-size: 16px;
+  font-size: 1em;
+  font-family: Arial;
   color: white;
   background-color: #6d74af;;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  
 }
 
 .dashboard__excluir{
   padding: 8px;
-  font-size: 16px;
+  font-size: 1em;
+  font-family: Arial;
   color: white;
   background-color: #b33f48;;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.adicionar:hover {
+  background-color: hsl(145, 11%, 43%); 
 }
 
 .dashboard__editar:hover {
@@ -134,4 +151,6 @@ export default {
 .dashboard__excluir:hover {
   background-color: hsl(0, 23%, 44%); 
 }
+
+
 </style>

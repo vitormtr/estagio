@@ -44,12 +44,8 @@ export default {
     </p>
 
     <div class="form__button-container">
-      <div class="form__button">
         <button type="submit" class="form__adicionar">Adicionar Usuário</button>
-      </div>
-      <div class="form__button">
-        <button class="form__editar">Registros</button>
-      </div>
+          <RouterLink to="/registros" class="form__editar">Registros</RouterLink>
     </div>
   </form>  
 </template>
@@ -72,7 +68,7 @@ export default {
 }
 
 .form__caixa {
-  margin-bottom: 15px;
+  margin-bottom: 24px;
 }
 
 .form__label {
@@ -100,38 +96,47 @@ export default {
 .form__button-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 16px;
 }
 
-.form__button {
-  width: 100%;
-}
-
-.form__adicionar, .form__editar {
+.form__adicionar {
   width: 100%;
   padding: 10px;
   font-size: 1em;
+  font-family: Arial; 
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  background-color: hsl(224, 34%, 47%); 
   transition: background-color 0.3s ease;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.form__adicionar {
-  background-color: hsl(224, 34%, 47%); 
+.form__editar {
+  max-width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  font-family: Arial; 
+  color: white;
+  border: none;
+  border-radius: 4px;
+  background-color: hsl(224, 34%, 47%); ; 
+  transition: background-color 0.3s ease;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
 }
+
 
 .form__adicionar:hover {
   background-color: hsl(224, 9%, 52%); 
 }
 
-.form__editar {
-  background-color: hsl(224, 34%, 47%); 
-}
 
 .form__editar:hover {
   background-color: hsl(224, 9%, 52%); 
