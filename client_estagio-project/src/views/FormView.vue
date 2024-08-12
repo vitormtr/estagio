@@ -4,16 +4,23 @@ import { RouterLink } from 'vue-router'
 
 <template>
   <form class="form">
-    <p class="form__titulo">Adicionar Usuário</p>
+
+    <p class="form__titulo">Adicionar Registro</p>
     <p class="form__caixa">
       <label for="registroNome" class="form__label">Nome:</label>
       <input type="text" id="registroNome" class="form__input" required>
     </p>
+
+    <p class="form__caixa">
+      <label for="registroIdade" class="form__label">Idade:</label>
+      <input type="text" id="registroIdade" class="form__input" required>
+    </p>
+
     <p class="form__caixa">
       <label for="registroEmail" class="form__label">Email:</label>
       <input type="text" id="registroEmail" class="form__input" required>
     </p>
-    
+
     <div class="form__button-container">
         <div class="form__button">
             <button type="submit" class="form__adicionar">Adicionar Usuário</button>
