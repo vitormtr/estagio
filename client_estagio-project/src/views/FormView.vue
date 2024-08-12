@@ -1,37 +1,58 @@
-<script setup>
-import { RouterLink } from 'vue-router'
+<script>
+import RegistrosService from '@/services/RegistrosService';
+
+export default {
+  data() {
+    return {
+      registro: {
+        nome: '',
+        idade: '',
+        email: ''
+      }
+    };
+  },
+  methods: {
+    async adicionarRegistro() {
+      try {
+        await RegistrosService.adicionarRegistro(this.registro);
+      } catch (error) {
+        console.error('Erro ao adicionar o registro:', error);
+      }
+    }
+  }
+};
 </script>
 
-<template>
-  <form class="form">
 
+<template>
+  <form class="form" @submit.prevent="adicionarRegistro">
     <p class="form__titulo">Adicionar Registro</p>
+
     <p class="form__caixa">
       <label for="registroNome" class="form__label">Nome:</label>
-      <input type="text" id="registroNome" class="form__input" required>
+      <input type="text" id="registroNome" class="form__input" v-model="registro.nome" required>
     </p>
 
     <p class="form__caixa">
       <label for="registroIdade" class="form__label">Idade:</label>
-      <input type="text" id="registroIdade" class="form__input" required>
+      <input type="text" id="registroIdade" class="form__input" v-model="registro.idade" required>
     </p>
 
     <p class="form__caixa">
       <label for="registroEmail" class="form__label">Email:</label>
-      <input type="text" id="registroEmail" class="form__input" required>
+      <input type="email" id="registroEmail" class="form__input" v-model="registro.email" required>
     </p>
 
     <div class="form__button-container">
-        <div class="form__button">
-            <button type="submit" class="form__adicionar">Adicionar Usuário</button>
-        </div>
-        <div class="form__button">
-            <RouterLink to="/registros" class="form__editar">Registros</RouterLink>
-        </div>
+      <div class="form__button">
+        <button type="submit" class="form__adicionar">Adicionar Usuário</button>
+      </div>
+      <div class="form__button">
+        <button class="form__editar">Registros</button>
+      </div>
     </div>
   </form>  
 </template>
-
 
 <style scoped>
 .form {

@@ -15,7 +15,8 @@ export default {
   
     async adicionarRegistro(registro) {
       try {
-        const response = await axios.post(API_URL + '/adicionar', registro);
+        console.log(registro)
+        const response = await axios.post(`${API_URL}/adicionar`, registro);
         return response.data;
       } catch (error) {
         console.error('Erro ao adicionar registro: ', error);

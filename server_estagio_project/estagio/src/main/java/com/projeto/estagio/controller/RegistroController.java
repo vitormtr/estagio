@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/registros")
 public class RegistroController {
 
@@ -45,6 +46,7 @@ public class RegistroController {
         }
     }
     @DeleteMapping("/deletar/{id}")
+    @CrossOrigin(origins = "http://localhost:5173")
     public ResponseEntity<String> deletarRegistro(@PathVariable Long id) {
         if (registroRepository.existsById(id)) {
             registroRepository.deleteById(id);
