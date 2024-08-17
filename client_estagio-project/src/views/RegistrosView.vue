@@ -1,11 +1,18 @@
 <script>
 import RegistrosService from '@/services/RegistrosService';
+import EditarRegistroModal from '../components/EditarRegistroModal.vue';
 
 export default {
   name: 'RegistrosView',
+  components: {
+    EditarRegistroModal
+  },
   data() {
     return {
-      registros: []
+      registros: [],
+      mostrarModal: false,
+      registroAtual: null,
+      registroIdAtual: null
     };
   },
   created() {
@@ -27,6 +34,31 @@ export default {
       } catch (error) {
         console.error('Erro ao remover os registros:', error);
       }
+    },
+
+    editarRegistro(registroId) {
+      const registro = this.registros.find(r => r.id === registroId);
+      this.registroIdAtual = registroId;
+      if (registro) {
+        this.registroAtual = registro;
+        this.mostrarModal = true;
+      }
+    },
+    
+     async salvarEdicao(registro) {
+      try {
+        await RegistrosService.atualizarRegistro(registro, this.registroIdAtual);
+        this.fetchRegistros();
+        this.mostrarModal = false;
+        this.registroAtual = null;
+      } catch (error) {
+        console.error('Erro ao atualizar o registro:', error);
+      }
+    },
+
+    cancelarEdicao() {
+      this.mostrarModal = false;
+      this.registroAtual = null;
     }
   }
 };
@@ -58,6 +90,13 @@ export default {
       </tbody>
     </table>
   </div>
+   <EditarRegistroModal
+      :mostrar="mostrarModal"
+      :registro="registroAtual"
+      @salvar="salvarEdicao"
+      @fechar="cancelarEdicao"
+    />
+
     <RouterLink to="/" class="adicionar">Adicionar Registro</RouterLink>
 </div>
 

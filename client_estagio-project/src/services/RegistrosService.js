@@ -15,7 +15,6 @@ export default {
   
     async adicionarRegistro(registro) {
       try {
-        console.log(registro)
         const response = await axios.post(`${API_URL}/adicionar`, registro);
         return response.data;
       } catch (error) {
@@ -34,12 +33,12 @@ export default {
         }
     },
 
-    async editarRegistro(registro){
+    async atualizarRegistro(registro, registroId){
         try{
-            const response = await axios.put(API_URL + '/editar', registro);
+            const response = await axios.put(`${API_URL}/atualizar/${registroId}`, registro);
             return response.data;
         } catch(error) {
-            console.error('Erro ao editar registro: ', error);
+            console.error('Erro ao atualizar registro: ', error);
         }
     }
 
