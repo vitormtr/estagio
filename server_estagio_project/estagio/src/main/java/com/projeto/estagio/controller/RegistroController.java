@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,15 +18,26 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/registros")
 public class RegistroController {
-
     @Autowired
     private RegistroRepository registroRepository;
 
     @GetMapping
-    public List<RegistroModel> getAllRegistros() {
-        return registroRepository.findAll();
+    public ResponseEntity<List<RegistroModel>> getRegistros(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RegistroModel> registros = registroRepository.findAll(pageable);
+        List<RegistroModel> registrosList = registros.getContent();
+        return new ResponseEntity<>(registrosList, HttpStatus.OK);
     }
-
+    @GetMapping("/filtrar")
+    public List<RegistroModel> getRegistroFiltradoPorNome(@RequestParam(required = false) String nome) {
+        if (nome == null || nome.isEmpty()) {
+            return registroRepository.findAll();
+        } else {
+            return registroRepository.findByNome(nome);
+        }
+    }
     @PostMapping("/adicionar")
     public ResponseEntity<RegistroModel> createRegistro(@RequestBody RegistroModel registro) {
         RegistroModel novoRegistro = registroRepository.save(registro);
