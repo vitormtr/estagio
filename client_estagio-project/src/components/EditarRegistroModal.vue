@@ -73,9 +73,6 @@ export default {
   max-width: 90%;
 }
 
-.modal__content h2 {
-  margin-top: 0;
-}
 
 .modal__content form div {
   margin-bottom: 15px;
