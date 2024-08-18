@@ -132,17 +132,12 @@ export default {
   text-decoration: none;
 }
 
-
 .form__adicionar:hover {
   background-color: hsl(224, 9%, 52%); 
 }
 
-
 .form__editar:hover {
   background-color: hsl(224, 9%, 52%); 
 }
-
-
-
 
 </style>

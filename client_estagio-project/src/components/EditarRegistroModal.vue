@@ -2,6 +2,7 @@
   <div v-if="mostrar" class="modal">
     <div class="modal__content">
       <h2>Editar Registro</h2>
+      <!-- prevent -> impede a pagina de atualizar -->
       <form @submit.prevent="salvarEdicao">
         <div>
           <label for="nome">Nome:</label>
@@ -15,8 +16,10 @@
           <label for="email">Email:</label>
           <input v-model="registro.email" id="email" type="email" />
         </div>
-        <button type="submit">Salvar</button>
-        <button type="button" @click="fecharModal">Cancelar</button>
+        <div class="button-group">
+          <button type="submit" class="button button--salvar">Salvar</button>
+          <button type="button" class="button button--cancelar" @click="fecharModal">Cancelar</button>
+        </div>
       </form>
     </div>
   </div>
@@ -24,6 +27,9 @@
 
 <script>
 export default {
+  /* -> estas propriedades sao recebidas do componente pai
+     -> RegistrosView é o pai neste caso
+  */
   props: {
     mostrar: {
       type: Boolean,
@@ -31,10 +37,10 @@ export default {
     },
     registro: {
       type: Object,
-      required: true,
-      default: () => ({})
+      required: true
     }
   },
+
   methods: {
     salvarEdicao() {
       this.$emit('salvar', this.registro); 
@@ -86,7 +92,35 @@ export default {
   box-sizing: border-box;
 }
 
-.modal__content form button {
-  margin-right: 10px;
+.button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  padding: 10px 20px;
+  font-size: 1em;
+  font-family: Arial, sans-serif;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button--salvar {
+  background-color: #658f75;
+}
+
+.button--salvar:hover {
+  background-color: #4e715d;
+}
+
+.button--cancelar {
+  background-color: #a94442;
+}
+
+.button--cancelar:hover {
+  background-color: #8b3634;
 }
 </style>

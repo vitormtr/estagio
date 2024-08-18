@@ -18,3 +18,5 @@ const router = createRouter({
     ]
 })
 export default router
+
+/* router tutorial usado: https://www.youtube.com/watch?v=PBqQO-keR1s */

@@ -4,9 +4,16 @@ import EditarRegistroModal from '../components/EditarRegistroModal.vue';
 
 export default {
   name: 'RegistrosView',
+
+  /* -> componentes filhos */
   components: {
     EditarRegistroModal
   },
+
+  /*
+    -> retorna um objeto que define o estado inicial do componente vue
+    -> essas propriedades sao reativas, mudar elas mudará também a interface onde elas são usadas
+  */
   data() {
     return {
       registros: [],
@@ -15,9 +22,15 @@ export default {
       registroIdAtual: null
     };
   },
+
+  /* -> hook do vue.js 
+     -> é chamado automaticamente assim que a instancia é criada 
+     -> bom pra inicializar os dados por ex. 
+  */ 
   created() {
     this.fetchRegistros();
   },
+
   methods: {
     async fetchRegistros() {
       try {
@@ -90,6 +103,7 @@ export default {
       </tbody>
     </table>
   </div>
+  <!-- salvar e fechar sao eventos personalizados emitidos no componente filho EditarRegistroModal-->
    <EditarRegistroModal
       :mostrar="mostrarModal"
       :registro="registroAtual"
@@ -97,11 +111,16 @@ export default {
       @fechar="cancelarEdicao"
     />
 
-    <RouterLink to="/" class="adicionar">Adicionar Registro</RouterLink>
+    <RouterLink to="/" class="dashboard__adicionar">Adicionar Registro</RouterLink>
 </div>
 
 </template>
 <style>
+
+/* .bloco   -> bloco
+   .bloco__ -> componente dentro do bloco
+   .bloco-- -> modifica o bloco 
+*/
 
 .dashboard {
   padding: 20px;
@@ -137,8 +156,7 @@ export default {
   cursor: pointer;
 }
 
-
-.adicionar{  
+.dashboard__adicionar{  
   margin-left: 20px;
   padding: 8px;
   display: inline-flex;
@@ -164,7 +182,6 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
 }
 
 .dashboard__excluir{
@@ -190,6 +207,5 @@ export default {
 .dashboard__excluir:hover {
   background-color: hsl(0, 23%, 44%); 
 }
-
 
 </style>
