@@ -30,6 +30,12 @@ public class RegistroController {
         List<RegistroModel> registrosList = registros.getContent();
         return new ResponseEntity<>(registrosList, HttpStatus.OK);
     }
+
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalRegistros() {
+        long totalRegistros = registroRepository.count();
+        return new ResponseEntity<>(totalRegistros, HttpStatus.OK);
+    }
     @GetMapping("/filtrar")
     public List<RegistroModel> getRegistroFiltradoPorNome(@RequestParam(required = false) String nome) {
         if (nome == null || nome.isEmpty()) {

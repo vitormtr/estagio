@@ -17,9 +17,14 @@ export default {
   data() {
     return {
       registros: [],
+      totalRegistros: 0,
       mostrarModal: false,
       registroAtual: null,
-      registroIdAtual: null
+      registroIdAtual: null,
+      nomeFiltro: '',
+      page: 0,
+      size: 5,
+      totalPages: 0
     };
   },
 
@@ -29,36 +34,60 @@ export default {
   */ 
   created() {
     this.fetchRegistros();
+    this.fetchTotalRegistros();
   },
 
   methods: {
     async fetchRegistros() {
       try {
-        this.registros = await RegistrosService.getRegistros();
+        this.registros = await RegistrosService.getRegistros(this.page, this.size);
+
       } catch (error) {
         console.error('Erro ao buscar os registros:', error);
       }
     },
 
+    async fetchTotalRegistros() {
+      try {
+        this.totalRegistros = await RegistrosService.getTotalRegistros();
+        this.totalPages = Math.ceil(this.totalRegistros / this.size);
+      } catch (error) {
+        console.error('Erro ao buscar o total de registros:', error);
+      }
+    },
+
+    async fetchRegistrosFiltrados() {
+      if (this.nomeFiltro.trim() === '') {
+        await this.fetchRegistros();
+        await this.fetchTotalRegistros();
+      } else {
+        try {
+          const registrosFiltrados = await RegistrosService.getRegistrosFiltrados(this.nomeFiltro);
+          if (registrosFiltrados.length === 0) {
+            this.registros = [];
+            this.totalPages = 1;
+          } else {
+            this.registros = registrosFiltrados;
+            this.totalPages = Math.ceil(this.registros.length / this.size);
+          }
+        } catch (error) {
+          console.error('Erro ao buscar os registros filtrados:', error);
+        }
+      }
+  },
     async removerRegistro(registroId) {
       try {
         await RegistrosService.removerRegistro(registroId);
+        if (this.page > 0 && this.registros.length === 1) {
+          this.page--;
+        }
         this.fetchRegistros();
       } catch (error) {
         console.error('Erro ao remover os registros:', error);
       }
     },
 
-    editarRegistro(registroId) {
-      const registro = this.registros.find(r => r.id === registroId);
-      this.registroIdAtual = registroId;
-      if (registro) {
-        this.registroAtual = registro;
-        this.mostrarModal = true;
-      }
-    },
-    
-     async salvarEdicao(registro) {
+    async salvarEdicao(registro) {
       try {
         await RegistrosService.atualizarRegistro(registro, this.registroIdAtual);
         this.fetchRegistros();
@@ -69,9 +98,42 @@ export default {
       }
     },
 
+
+    editarRegistro(registroId) {
+      const registro = this.registros.find(r => r.id === registroId);
+      this.registroIdAtual = registroId;
+      this.fetchRegistros();
+      if (registro) {
+        this.registroAtual = registro;
+        this.mostrarModal = true;
+      }
+    },
+    
     cancelarEdicao() {
       this.mostrarModal = false;
       this.registroAtual = null;
+    },
+
+    async nextPage() {
+    if (this.page < this.totalPages - 1) {
+      this.page++;
+      if (this.nomeFiltro.trim() === '') {
+        this.fetchRegistros();
+      } else {
+        this.fetchRegistrosFiltrados();
+      }
+    }
+  },
+
+    async previousPage() {
+      if (this.page > 0) {
+        this.page--;
+        if (this.nomeFiltro.trim() === '') {
+          this.fetchRegistros();
+        } else {
+          this.fetchRegistrosFiltrados();
+        }
+      }
     }
   }
 };
@@ -81,6 +143,10 @@ export default {
 <div>
   <div class="dashboard">
     <h1 class="dashboard__title">Registros</h1>
+      <div class="dashboard__search">
+        <input v-model="nomeFiltro" placeholder="Pesquisar por nome" />
+        <button @click="fetchRegistrosFiltrados">Filtrar</button>
+      </div>
     <table class="dashboard__table">
       <thead>
         <tr>
@@ -91,6 +157,11 @@ export default {
         </tr>
       </thead>
       <tbody>
+
+        <tr v-if="registros.length === 0">
+          <td colspan="4" class="sem-registros">Sem registros</td>
+        </tr>
+
         <tr v-for="(registro) in registros" :key="registro.id">
           <td>{{ registro.nome }}</td>
           <td>{{ registro.idade }}</td>
@@ -102,7 +173,14 @@ export default {
         </tr>
       </tbody>
     </table>
+
+    <div class="paginacao">
+        <button @click="previousPage" :disabled="page === 0">Anterior</button>
+        <span>Página {{ page + 1 }} de {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="page >= totalPages - 1">Próxima</button>
+      </div>
   </div>
+
   <!-- salvar e fechar sao eventos personalizados emitidos no componente filho EditarRegistroModal-->
    <EditarRegistroModal
       :mostrar="mostrarModal"
@@ -131,6 +209,35 @@ export default {
   margin-bottom: 20px;
 }
 
+.dashboard__search {
+  margin-bottom: 20px;
+}
+
+.dashboard__search input {
+  padding: 8px;
+  width: 100%;
+  max-width: 150px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.dashboard__search button {
+  margin-left: 10px;
+  padding: 8px 12px;
+  font-size: 1em;
+  font-family: Arial;
+  color: white;
+  background-color: #6d74af;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dashboard__search button:hover {
+  background-color: hsl(226, 18%, 58%);
+}
+
 .dashboard__table {
   width: 100%;
   border-collapse: collapse;
@@ -154,6 +261,38 @@ export default {
   margin-left: 5px;
   padding: 5px 10px;
   cursor: pointer;
+}
+
+.sem-registros {
+  text-align: center;
+  font-size: 1.2em;
+  color: #888;
+  padding: 20px;
+}
+
+.paginacao {
+  margin-top: 20px;
+}
+
+.paginacao button {
+  padding: 8px 12px;
+  font-size: 1em;
+  font-family: Arial;
+  color: white;
+  background-color: #6d74af;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.paginacao button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.paginacao span {
+  margin: 0 10px;
 }
 
 .dashboard__adicionar{  

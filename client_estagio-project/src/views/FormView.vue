@@ -8,15 +8,22 @@ export default {
         nome: '',
         idade: '',
         email: ''
-      }
+      },
+      message: '',  // Mensagem de sucesso ou erro
+      errorMessage: ''  // Mensagem de erro
     };
   },
   methods: {
     async adicionarRegistro() {
       try {
         await RegistrosService.adicionarRegistro(this.registro);
+        this.message = 'Registro adicionado com sucesso!'; 
+        this.registro = { nome: '', idade: '', email: '' };
+        this.errorMessage = ''; 
       } catch (error) {
         console.error('Erro ao adicionar o registro:', error);
+        this.errorMessage = 'Erro ao adicionar o registro. Por favor, tente novamente.';
+        this.message = '';
       }
     }
   }
@@ -44,10 +51,17 @@ export default {
     </p>
 
     <div class="form__button-container">
-        <button type="submit" class="form__adicionar">Adicionar Usuário</button>
-          <RouterLink to="/registros" class="form__editar">Registros</RouterLink>
+      <button type="submit" class="form__adicionar">Adicionar Usuário</button>
+      <RouterLink to="/registros" class="form__editar">Registros</RouterLink>
     </div>
-  </form>  
+
+    <div v-if="message" class="form__message form__message--success">
+      {{ message }}
+    </div>
+    <div v-if="errorMessage" class="form__message form__message--error">
+      {{ errorMessage }}
+    </div>
+  </form>
 </template>
 
 <style scoped>
@@ -138,6 +152,25 @@ export default {
 
 .form__editar:hover {
   background-color: hsl(224, 9%, 52%); 
+}
+
+.form__message {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.form__message--success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.form__message--error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
 }
 
 </style>
